@@ -1,0 +1,16 @@
+Pima Indians Diabetes Database
+------------------------------
+File:            data/pima_diabetes.csv (768 rows x 9 columns, header added by download_data.py)
+Downloaded from: https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv
+                 (public mirror of the UCI / NIDDK file; no header row in the original)
+SHA-256 of downloaded raw file: 6bfe5d0f379d17a0e0819b996407e3c09bf80febd4287f2ed212190dfff154af
+Kaggle listing named in the ethics form (licence shown there as CC0: Public Domain):
+                 https://www.kaggle.com/datasets/jamaltariqcheema/pima-indians-diabetes-dataset
+Licence text:    https://creativecommons.org/publicdomain/zero/1.0/
+Original source: National Institute of Diabetes and Digestive and Kidney Diseases; first
+                 described in Smith et al. (1988), Proc. Annual Symposium on Computer
+                 Application in Medical Care, 261-265.
+Class counts:    Outcome 0 = 500, Outcome 1 = 268.
+Note: the values in the mirror are the standard 768-row Pima table (same counts as the Kaggle
+listing). The Kaggle copy needs a Kaggle login to download, so the public mirror was used for a
+scripted, reproducible download.

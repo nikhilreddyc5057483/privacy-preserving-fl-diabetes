@@ -1,0 +1,10 @@
+# Runtime requirements: experiments + Streamlit demo.
+# This file sits at the repo root so Streamlit Community Cloud installs it automatically.
+numpy==2.5.5
+pandas==3.1.1
+scikit-learn==1.9.1
+matplotlib==3.11.2
+PyYAML==6.0.4
+streamlit==1.67.0
+altair==6.3.0
+websockets==16.1.1      # avoids a websocket-handshake issue behind reverse proxies (Streamlit Cloud)

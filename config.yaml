@@ -1,0 +1,49 @@
+# Experiment settings for the Pima federated-learning prototype.
+# Values marked (report) come straight from the dissertation report.
+# Values marked (chosen) were not stated in the report, so sensible defaults were picked.
+
+seed: 42                      # (report) random_state used everywhere
+
+data:
+  csv_path: data/pima_diabetes.csv
+  source_url: https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv
+  kaggle_listing: https://www.kaggle.com/datasets/jamaltariqcheema/pima-indians-diabetes-dataset
+  test_size: 0.2              # (report) 80/20 stratified split -> 614 train / 154 test
+  # (report) columns where a 0 is physiologically implausible -> treated as missing,
+  # then filled with the TRAINING-set median (chosen: median, as the report says).
+  zero_as_missing: [Glucose, BloodPressure, SkinThickness, Insulin, BMI]
+
+centralised:
+  logistic_regression:
+    class_weight: balanced    # (report) LogisticRegression(class_weight=balanced)
+    max_iter: 1000            # (chosen)
+    C: 1.0                    # (chosen) sklearn default
+  random_forest:
+    n_estimators: 300         # (chosen)
+    max_depth: null           # (chosen)
+    class_weight: balanced    # (chosen) mirrors the LR baseline
+  sgd_logreg:                 # (chosen) pooled version of the exact model FL trains
+    epochs: 75                # = rounds x local_epochs, so it sees the data as often as FL
+
+federated:
+  rounds: 15                  # (report) 15 communication rounds
+  client_counts: [3, 5]       # (report) 3 and 5 simulated clients
+  local_epochs: 5             # (chosen) E local SGD epochs per client per round
+  batch_size: 16              # (chosen) mini-batch size for local SGD
+  learning_rate: 0.05         # (chosen) local SGD step size
+  l2: 0.0001                  # (chosen) small weight decay inside local SGD
+  class_weight: balanced      # (chosen) each client re-weights its own labels, like the LR baseline
+  fedprox_mu: 0.1             # (chosen) FedProx proximal term strength
+  non_iid:
+    method: dirichlet_label_skew   # (report) label-skew shards
+    alpha: 0.5                # (chosen) smaller alpha = stronger skew
+    min_client_size: 20       # (chosen) resample until every client has at least this many rows
+  dp:
+    clip_norm: 1.0            # (chosen) L2 clipping bound on each client's model update
+    noise_multiplier: 0.5     # (chosen) Gaussian noise std = noise_multiplier * clip_norm (headline DP run)
+    sweep: [0.0, 0.1, 0.25, 0.5, 1.0, 2.0]   # (chosen) noise levels for the DP-effect plot
+
+outputs:
+  results_dir: results
+  figures_dir: results/figures
+  models_dir: models
