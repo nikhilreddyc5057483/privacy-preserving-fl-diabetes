@@ -1,0 +1,28 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0 -- /workspace/nikhil-fl-diabetes/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/nikhil-fl-diabetes
+plugins: platformdirs-4.14.8, anyio-4.16.0
+collecting ... collected 19 items
+
+tests/test_data_prep.py::test_dataset_shape_and_classes PASSED           [  5%]
+tests/test_data_prep.py::test_imputation_replaces_zeros_with_train_median PASSED [ 10%]
+tests/test_data_prep.py::test_no_implausible_zeros_after_prep PASSED     [ 15%]
+tests/test_data_prep.py::test_imputer_and_scaler_fitted_on_train_only PASSED [ 21%]
+tests/test_data_prep.py::test_stratified_split PASSED                    [ 26%]
+tests/test_data_prep.py::test_split_is_reproducible PASSED               [ 31%]
+tests/test_federated.py::test_iid_shards_disjoint_and_complete[3] PASSED [ 36%]
+tests/test_federated.py::test_iid_shards_disjoint_and_complete[5] PASSED [ 42%]
+tests/test_federated.py::test_non_iid_shards_disjoint_and_skewed[3] PASSED [ 47%]
+tests/test_federated.py::test_non_iid_shards_disjoint_and_skewed[5] PASSED [ 52%]
+tests/test_federated.py::test_fedavg_weighted_average PASSED             [ 57%]
+tests/test_federated.py::test_fedavg_matches_flower_aggregate PASSED     [ 63%]
+tests/test_federated.py::test_dp_clipping_and_noise PASSED               [ 68%]
+tests/test_federated.py::test_fedprox_term_pulls_towards_global PASSED   [ 73%]
+tests/test_federated.py::test_run_federated_history_and_dp_changes_model PASSED [ 78%]
+tests/test_outputs.py::test_compute_metrics_keys PASSED                  [ 84%]
+tests/test_outputs.py::test_exported_metrics_have_all_keys PASSED        [ 89%]
+tests/test_outputs.py::test_streamlit_app_imports PASSED                 [ 94%]
+tests/test_outputs.py::test_streamlit_app_runs_headless PASSED           [100%]
+
+============================== 19 passed in 2.37s ==============================
