@@ -1,0 +1,6 @@
+,accuracy,accuracy,precision,precision,recall,recall,f1,f1,roc_auc,roc_auc
+,mean,std,mean,std,mean,std,mean,std,mean,std
+run_id,,,,,,,,,,
+fl5_iid_fedavg,0.7169,0.0036,0.5813,0.0044,0.6889,0.0083,0.6305,0.0051,0.8098,0.0003
+fl5_non_iid_fedavg,0.7065,0.0299,0.5789,0.0371,0.5963,0.0757,0.5862,0.0515,0.801,0.0221
+fl5_non_iid_fedprox,0.7104,0.0237,0.5834,0.0299,0.6111,0.0614,0.5959,0.0386,0.8016,0.0199
