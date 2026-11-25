@@ -26,8 +26,8 @@ FIGS = RESULTS / "figures"
 MODELS = ROOT / "models" / "models.json"
 FEEDBACK_DIR = ROOT / "feedback"
 
-# Placeholder: replace with the real Microsoft Form link (or set MS_FORM_URL in Streamlit secrets)
-MS_FORM_URL_PLACEHOLDER = "https://forms.office.com/r/REPLACE_WITH_FORM_ID"
+# Live Microsoft Forms questionnaire (can be overridden with MS_FORM_URL in Streamlit secrets)
+MS_FORM_URL_DEFAULT = "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=ofZoiROsL0e4mfcxbkOfQw69TnFTThZMhj03lZluKwdUMjREUzNQM1NORjdSVTNEWk1PNFFEMDhJNi4u"
 
 # Annex D (UREC2) evaluation questionnaire - wording kept exactly as approved.
 LIKERT_ITEMS = [
@@ -86,9 +86,9 @@ def load_models():
 
 def ms_form_url() -> str:
     try:
-        return st.secrets.get("MS_FORM_URL", os.environ.get("MS_FORM_URL", MS_FORM_URL_PLACEHOLDER))
+        return st.secrets.get("MS_FORM_URL", os.environ.get("MS_FORM_URL", MS_FORM_URL_DEFAULT))
     except Exception:                                    # no secrets.toml present
-        return os.environ.get("MS_FORM_URL", MS_FORM_URL_PLACEHOLDER)
+        return os.environ.get("MS_FORM_URL", MS_FORM_URL_DEFAULT)
 
 
 def fig(name, caption):
