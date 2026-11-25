@@ -25,4 +25,4 @@ tests/test_outputs.py::test_exported_metrics_have_all_keys PASSED        [ 89%]
 tests/test_outputs.py::test_streamlit_app_imports PASSED                 [ 94%]
 tests/test_outputs.py::test_streamlit_app_runs_headless PASSED           [100%]
 
-============================== 19 passed in 2.37s ==============================
+============================== 19 passed in 2.41s ==============================

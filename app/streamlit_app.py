@@ -63,7 +63,7 @@ CONSENT_ITEMS = [
     "I agree that my anonymised answers can be used in this MSc dissertation.",
 ]
 DISCLAIMER = ("**Not a diagnostic device.** This is a student research prototype trained on a "
-              "public 1990s research dataset (768 rows). Its output is a statistical score for "
+              "public research dataset collected in the 1980s (768 rows). Its output is a statistical score for "
               "demonstration only and must not be used for any health decision. If you are "
               "worried about diabetes, speak to a GP or pharmacist.")
 
@@ -94,7 +94,7 @@ def ms_form_url() -> str:
 def fig(name, caption):
     path = FIGS / name
     if path.exists():
-        st.image(str(path), caption=caption, use_container_width=True)
+        st.image(str(path), caption=caption, width="stretch")
 
 
 # ----------------------------------------------------------------------- tabs
@@ -135,7 +135,7 @@ def tab_results(m):
     st.dataframe(view.style.format({c: "{:.3f}" for c in
                                     ["Accuracy", "Precision", "Recall", "F1", "ROC-AUC"]})
                  .highlight_max(subset=["ROC-AUC"], color="#d4edda"),
-                 hide_index=True, use_container_width=True, height=(len(view) + 1) * 35 + 3)
+                 hide_index=True, width="stretch", height=(len(view) + 1) * 35 + 3)
     st.caption("Positive class = diabetes (Outcome 1). Threshold 0.5. Same seeded split "
                "(random_state = 42) for every model.")
 
@@ -154,7 +154,7 @@ def tab_results(m):
                      color=alt.Color("label:N", title="Run"),
                      tooltip=["label", "round", alt.Tooltip(f"{metric}:Q", format=".3f")])
              .properties(height=320))
-    st.altair_chart(chart, use_container_width=True)
+    st.altair_chart(chart, width="stretch")
 
     st.subheader("Figures")
     a, b = st.columns(2)
@@ -212,7 +212,7 @@ digraph G { rankdir=TB; node [shape=box, style="rounded,filled", fontname=Helvet
     st.markdown("**Privacy–utility trade-off (5 clients, IID):** more noise → lower ROC-AUC.")
     st.dataframe(sweep[["noise_multiplier", "accuracy", "f1", "roc_auc"]].rename(columns={
         "noise_multiplier": "Noise σ", "accuracy": "Accuracy", "f1": "F1", "roc_auc": "ROC-AUC"})
-        .style.format("{:.3f}"), hide_index=True, use_container_width=True)
+        .style.format("{:.3f}"), hide_index=True, width="stretch")
 
 
 def tab_predict():
