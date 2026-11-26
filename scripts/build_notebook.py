@@ -144,7 +144,47 @@ display(sweep.round(3))
 ax = sweep[["roc_auc", "f1", "accuracy"]].plot(marker="o", figsize=(5.5, 3.6), grid=True)
 ax.set_ylabel("score"); ax.set_title("More noise → lower utility (FL5 IID FedAvg)"); plt.show()
 """)
-md("## 9. Cross-checks\n**(a)** the notebook numbers equal the exported `results/metrics.json`; **(b)** a Flower (flwr) simulation of the same settings gives very similar results.")
+md("## 9. ROC curves, confusion matrices and feature importances\nThe curves and matrices below use the same held-out test set (n = 154) and the probabilities stored in `probs` above. The noise run uses the headline setting from `config.yaml` (clip norm C = 1.0, noise multiplier σ = 0.5).")
+code("""
+from sklearn.metrics import roc_curve
+PALETTE = ["#1f4e79", "#c0504d", "#4f81bd", "#9bbb59", "#8064a2", "#f79646", "#4bacc6"]
+r_dp = run_federated(Xtr, ytr, Xte, yte, n_clients=5, partition="iid", strategy="fedavg",
+                     dp_clip=dp["clip_norm"], dp_noise=dp["noise_multiplier"], **kw)
+probs["FL5 IID FedAvg + DP"] = predict_proba(r_dp.params, Xte)
+roc_models = ["Central LR", "Central RF", "FL3 IID FedAvg", "FL5 IID FedAvg",
+              "FL5 non-IID FedAvg", "FL5 non-IID FedProx", "FL5 IID FedAvg + DP"]
+fig, ax = plt.subplots(figsize=(6, 5))
+for k, label in enumerate(roc_models):
+    fpr, tpr, _ = roc_curve(yte, probs[label])
+    auc = compute_metrics(yte, probs[label])["roc_auc"]
+    ax.plot(fpr, tpr, color=PALETTE[k], lw=1.6, label=f"{label} (AUC={auc:.3f})")
+ax.plot([0, 1], [0, 1], "k--", lw=1, label="Chance")
+ax.set_xlabel("False positive rate"); ax.set_ylabel("True positive rate")
+ax.set_title(f"ROC curves on held-out test set (n = {len(yte)})"); ax.legend(fontsize=7.5, loc="lower right")
+plt.show()
+""")
+code("""
+fig, axes = plt.subplots(1, 2, figsize=(8, 3.4))
+for ax, label in zip(axes, ["Central LR", "FL5 IID FedAvg"]):
+    cm = compute_metrics(yte, probs[label])["confusion_matrix"]
+    mat = np.array([[cm["tn"], cm["fp"]], [cm["fn"], cm["tp"]]])
+    im = ax.imshow(mat, cmap="Blues")
+    for i in range(2):
+        for j in range(2):
+            ax.text(j, i, mat[i, j], ha="center", va="center", fontsize=13,
+                    color="white" if mat[i, j] > mat.max() / 2 else "black")
+    ax.set_xticks([0, 1], ["Pred 0", "Pred 1"]); ax.set_yticks([0, 1], ["Actual 0", "Actual 1"])
+    ax.set_title(f"{label} (n_test = {len(yte)})", fontsize=10); fig.colorbar(im, ax=ax, fraction=0.046)
+plt.tight_layout(); plt.show()
+""")
+code("""
+imp = pd.Series(rf.feature_importances_, index=FEATURES).sort_values()
+ax = imp.plot.barh(color="#1f4e79", figsize=(5.5, 3.6))
+ax.set_xlabel("Mean decrease in impurity")
+ax.set_title(f"Random forest feature importances (n_train = {len(ytr)})"); plt.show()
+print(imp.sort_values(ascending=False).round(3).to_dict())
+""")
+md("## 10. Cross-checks\n**(a)** the notebook numbers equal the exported `results/metrics.json`; **(b)** a Flower (flwr) simulation of the same settings gives very similar results.")
 code("""
 exported = {r["label"]: r for r in json.loads((ROOT / "results/metrics.json").read_text())["runs"]}
 diff = max(abs(exported[m][k] - results.loc[m, k]) for m in results.index for k in METRIC_KEYS)
@@ -155,7 +195,7 @@ if fl.exists():
         print(name, {k: round(v["final"][k], 3) for k in METRIC_KEYS})
 """)
 md("""
-## 10. Summary
+## 11. Summary
 * Federated training reaches ROC-AUC close to the centralised logistic regression when client
   data are IID, without any raw row leaving its client.
 * Strong label skew (non-IID) lowers performance; FedProx gives at most a small change here.
